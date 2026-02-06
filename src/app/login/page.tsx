@@ -19,6 +19,9 @@ const Login = () => {
         password,
         redirect: false,
       });
+      if (result?.error) {
+        console.log("Login Failed", result.error);
+      }
       console.log("Sign in = ", result);
       router.push("/");
     } catch (error) {

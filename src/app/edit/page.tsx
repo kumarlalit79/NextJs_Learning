@@ -1,13 +1,16 @@
 "use client";
+import { userDataContext } from "@/context/UserContext";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 
 const Edit = () => {
-  const { data } = useSession();
-  const [name, setName] = useState(data?.user.name || "");
+  
+  const data = useContext(userDataContext)
+
+  const [name, setName] = useState(data?.user?.name || "");
 
   const [frontendImage, setFrontendImage] = useState("");
   const [backendImage, setBackendImage] = useState<File>();
@@ -38,6 +41,8 @@ const Edit = () => {
 
       const result = await axios.post("/api/edit", formData);
       console.log("handleSubmit", result);
+
+      data?.setUser(result.data)
       
     } catch (error) {
       console.log(error);
@@ -46,8 +51,8 @@ const Edit = () => {
 
   useEffect(() => {
     if (data) {
-      setName(data?.user.name as string);
-      setFrontendImage(data?.user.image as string);
+      setName(data?.user?.name as string);
+      setFrontendImage(data?.user?.image as string);
     }
   }, [data]);
 
